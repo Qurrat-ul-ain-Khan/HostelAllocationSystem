@@ -1,0 +1,182 @@
+#include <limits>//using to save inputs from escaping
+#include <iostream>
+#include <sstream>
+#include<iomanip>//for spacing
+#include <fstream>//using to work with external file
+using namespace std;
+void free_room();
+void delete_data();
+void find_student();
+void allocate_room();
+void intro();
+// creating structures
+struct hostel{
+    string name,department,roll;
+    int room;
+};
+int main(){
+    int i=0;
+    // ask user after exectution of each function, to continue or exit
+    do{ intro();
+        cout<<"\nEnter 0 to continue and 1 to exit: ";
+        cin>>i;
+    }while(i!=1);
+    return 0 ;
+}
+
+void free_room() {
+    hostel student;
+    bool anyFree = false;
+    int roomCount[101] = {0};
+    ifstream file("records.txt");
+    if (!file) {
+        cout << "File not found.\n";
+        return;}
+    string header;
+    getline(file, header); // skip header
+    // check how many students are in each room
+    while (file >> student.name >> student.roll >> student.department >> student.room) {if (student.room >= 1 && student.room <= 100) {
+            roomCount[student.room]++;}}
+    cout << "\n----- FREE ROOMS -----\n";
+    for (int i = 1; i <= 100; i++) {
+        if (roomCount[i] < 4) {
+            cout << "Room " << i << " is free (" << roomCount[i] << "/4 occupied)\n";
+            anyFree = true;}}
+    if (!anyFree)   cout << "No free rooms available.\n";
+}
+
+void delete_data(){
+    ofstream hostel_records("records.txt",ios::trunc);
+    hostel_records.close();
+}
+
+void find_student(){
+    string roll;
+    bool found = false;
+    string line;
+    hostel read;
+    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+    // display
+    cout<<"enter roll number of student to be found: ";
+    getline(cin,roll);
+
+    ifstream reading("records.txt");  // open only for reading
+    // raise error if the file is not found
+    if (!reading) {
+        cout << "File not found or cannot be opened.\n";
+        return;
+    } 
+    // find student data by roll no.
+    while (getline(reading, line)) {
+        istringstream ss(line);
+        ss >> read.name >> read.roll >> read.department >> read.room;
+
+        if (read.roll == roll) {
+            found = true;
+            cout << "Matching line from file:\n";
+            cout << line << endl; // prints the entire line exactly as in the file
+        }
+    }
+    if(!found){
+            cout<<"No record found for roll number: "<<roll<<"\n";
+        }
+
+    reading.close();//close the file so data would stay safe
+    
+}
+void allocate_room(){
+    // calling struct variables
+    hostel student;
+    hostel read;
+    int count=0;
+    // display 
+    cout<<"---------------------------------------------\n";
+    cout<<"         ALLOCATE STUDENT\n";
+    cout<<"---------------------------------------------\n";
+    // gathering data
+    cout<<"Enter Student Name: ";
+    getline(cin,student.name);
+    cout<<"Enter roll number: ";
+    getline(cin,student.roll);
+    cout<<"Enter department: ";
+    getline(cin,student.department);
+    cout<<"Enter room number from 1-100: ";
+    cin>>student.room;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    // call file in reading mode
+    ifstream reading("records.txt");
+    // raise error if the file is not found
+    if(!reading.is_open()){
+            cout << "Error opening file.\n";
+        }
+    // check if room is valid
+    if(student.room<1 || student.room>100)
+    {
+        cout<<"invalid room number";
+        return ;
+    }
+    // skip header line (the first line)
+        string header;
+        getline(reading, header);
+    // check if the room is full
+    while (reading>>read.name>>read.roll>>read.department>>read.room)
+        {if(read.room==student.room){
+                cout<<student.room<<endl;
+                count++;}}
+        reading.close();
+    if(count>=4){
+        cout<<"room is full\n";
+        return ;
+        }
+    // calling file in writing mode
+    ofstream writing("records.txt",ios::app);
+    // add heading if the file is empty
+    writing.seekp(0, ios::end);
+            if(writing.tellp()==0){
+                writing<<left<<setw(20)<<"Name"<<setw(20)<<"Roll"<<setw(20)<<"Department"<<setw(5)<<"Room"<<endl;
+            }
+            // write data in file
+            writing << left
+       << setw(20) << student.name
+       << setw(20) << student.roll
+       << setw(20) << student.department
+       << setw(5)  << student.room
+       << endl;
+            writing.close();
+            // print succession message
+            cout<<"Room "<<student.room<<" has allocated to "<<student.name<<endl;    
+        
+    
+}
+void intro(){
+    int choice;
+    // starting display
+    cout<<"---------------------------------------------\n";
+    cout<<"        HOSTEL ROOM ALLOCATION SYSTEM\n";
+    cout<<"---------------------------------------------\n";
+    //display options
+    cout<<"1. Allocate Room\n";
+    cout<<"2. Search Student\n";
+    cout<<"3. Display All free Rooms\n";
+    cout<<"4. Delete data\n";
+    cout<<"Enter your choice: ";
+    
+    cin>>choice;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');//ignore characters in the input buffer left by cin for getline
+    // selecting options
+    switch (choice){
+        case 1:
+            allocate_room();//a new function to allocate room
+            break;
+        case 2:
+            find_student();//a new function to find student
+            break;
+        case 3:
+            free_room();//a new function to display free rooms
+            break;
+        case 4:
+            delete_data();//a new function to delete data
+            break;
+    }
+
+}
