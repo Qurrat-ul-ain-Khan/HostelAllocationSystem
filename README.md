@@ -25,10 +25,10 @@ The Hostel Allocation Project is based on C++. The purpose of this project is to
 2.	VS Code
 
 3.	Header files :
-   ,<iomanip>
-   ,<fstream>
-   ,<sstream>
-   ,<limits>
+   ,iomanip
+   ,fstream
+   ,sstream
+   ,limits
    
 4.	Loops, functions, structures
 
