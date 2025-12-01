@@ -1,2 +1,33 @@
 # HostelAllocationSystem
-A beginner friendly project written in C++ language without using OOPs
+🎨 Introduction:
+
+The Hostel Allocation Project is based on C++. The purpose of this project is to assign rooms to students based on their choices and data. It is built using a combination of functions, structures, loops, switch statements, file handling, and logical reasoning.
+
+
+  
+🧵 Objectives:
+
+•	Allocate rooms to students
+
+•	Display all free rooms
+
+•	Find students by roll number
+
+•	Delete all the data in the file
+
+•	Store student’s input/data in a txt file
+
+
+
+🎮 Tools used:
+1.	C++ language
+
+2.	VS Code
+
+3.	Header files :
+a.	<iomanip>
+b.	<fstream>
+c.	<sstream>
+d.	<limits>
+4.	Loops, functions, structures
+
